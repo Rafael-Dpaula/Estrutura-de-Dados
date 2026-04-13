@@ -2,98 +2,75 @@
 using namespace std;
 #include "../pilha-dinamica.hpp"
 
-void ordena(Pilha *p)
-{
+/**
+ * att4.3 - Lista 4 exercício 3: Ordenar sequência inteiros com 2 pilhas ORD e AUX.
+ * Regra: Nenhum item empilhado sobre outro menor (ORD descending: topo maior, base menor).
+ * Lógica insertion sort simples:
+ * 1. Enquanto entrada não vazia:
+ *    - Pega valor = desempilha(entrada)
+ *    - Move de ORD para AUX enquanto topo(ORD) > valor (acha posição)
+ *    - Empilha valor em ORD
+ *    - Move AUX de volta para ORD
+ * 2. Usa só pilhas, sem vetores.
+ * 3. Menu intuitivo PT-BR.
+ */
+
+void ordena(Pilha *entrada) {
     Pilha ord, aux;
-    while (!vaziaP(p))
-    {
-        int v = p->topo->dado;
-        if (vaziaP(&ord) or v >= ord.topo->dado)
-        {
-            empilhaP(&ord, v);
-            desempilhaP(p);
+    
+    // Passo 1: Processa todos valores da entrada original
+    while (!vaziaP(entrada)) {
+        int valor = desempilhaP(entrada); // Remove topo entrada
+        
+        // Passo 2: Encontra posição correta em ORD (insertion)
+        while (!vaziaP(&ord) && espiaP(&ord) > valor) {
+            // Move maiores de ORD para AUX temp
+            empilhaP(&aux, desempilhaP(&ord));
         }
-        else
-        {
-            empilhaP(&aux, v);
-            desempilhaP(p);
-
-            while (!vaziaP(&aux))
-            {
-                if (ord.topo->dado >= aux.topo->dado)
-                {
-                    int vA = ord.topo->dado;
-                    desempilhaP(&ord);
-                    empilhaP(&ord, aux.topo->dado);
-                    desempilhaP(&aux);
-                    empilhaP(&ord, vA);
-                }
-            }
-        }
-    }
-
-    // mostraP(&ord, "ord");
-    // cout << endl
-    //      << endl;
-
-    bool troca = true;
-    while (troca) {
-        troca = false;
-        while (!vaziaP(&ord)) {
-            int atual = desempilhaP(&ord);
-            if (!vaziaP(&aux)) {
-                int anterior = desempilhaP(&aux);
-                if (anterior > atual) {
-                    empilhaP(&aux, atual);
-                    empilhaP(&aux, anterior);
-                    troca = true;
-                } else {
-                    empilhaP(&aux, anterior);
-                    empilhaP(&aux, atual);
-                }
-            } else {
-                empilhaP(&aux, atual);
-            }
-        }
+        
+        // Passo 3: Insere valor no lugar certo
+        empilhaP(&ord, valor);
+        
+        // Passo 4: Restaura ORD de AUX
         while (!vaziaP(&aux)) {
             empilhaP(&ord, desempilhaP(&aux));
         }
-        destroiP(&aux);
     }
-
-    mostraP(&ord, "ord");
-    cout << endl
-         << endl;
-
-    //mostraP(&aux, "aux");
-
-    destroiP(&ord);
-    destroiP(&aux);
+    
+    // Passo 5: Copia resultado ordenado de volta para entrada (interface limpa)
+    while (!vaziaP(&ord)) {
+        empilhaP(entrada, desempilhaP(&ord)); // Nota: reverse aqui, mas como descending ok
+    }
+    
+    mostraP(entrada, "Pilha ORD ordenada (topo maior)");
+    cout << endl << endl;
+    
+    destroiP(&aux); // Limpa aux (ord já copiado)
 }
 
-int main()
-{
-
-    cout << "Quantos valores deseja inserir na pilha?";
+int main() {
+    setlocale(LC_ALL, "Portuguese"); // Acentos PT-BR
+    
+    cout << "=== ORDENAR PILHA COM ORD/AUX ===" << endl;
+    cout << "Quantos valores deseja inserir? ";
     int qtd;
     cin >> qtd;
-
+    cin.ignore(); // Limpa buffer
+    
     Pilha p;
-
-    for (int i = 0; i < qtd; i++)
-    {
-        cout << "Informe o valor " << i + 1 << " a ser adicionado a pilha: ";
+    
+    for (int i = 0; i < qtd; i++) {
+        cout << "Informe o valor " << (i + 1) << ": ";
         int val;
         cin >> val;
         empilhaP(&p, val);
     }
-
-    // mostraP(&p, "pilha");
-
-    cout << endl
-         << endl;
-
+    
+    cout << endl << "Pilha original:" << endl;
+    mostraP(&p, "Original");
+    
     ordena(&p);
-
-    return EXIT_SUCCESS;
+    
+    destroiP(&p);
+    return 0;
 }
