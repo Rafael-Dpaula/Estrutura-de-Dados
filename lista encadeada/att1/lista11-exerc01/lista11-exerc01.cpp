@@ -3,13 +3,13 @@ using namespace std;
 
 #include "lista.hpp"
 
-//passo 1: encontrar o primeiro nó que possui o valor par
+//passo 1: encontrar o primeiro nï¿½ que possui o valor par
 
-//passo 2: criar o novo nó
+//passo 2: criar o novo nï¿½
 
 //passo 3: ligar os ponteiros
 
-//Atenção:
+//Atenï¿½ï¿½o:
 //-lista vazia
 //-lista sem elementos pares
 
@@ -19,9 +19,9 @@ void insereAposPrimeiroPar(No** lista, int valor)
     while(atual!=NULL && atual->dado%2 != 0)
         atual = atual->prox;
 
-    if(atual!=NULL) //se atual==NULL, a lita está vazis ou não possui par
+    if(atual!=NULL) //se atual==NULL, a lita estï¿½ vazis ou nï¿½o possui par
     {
-        No *novo = new No(); // aloca memória para o nó
+        No *novo = new No(); // aloca memï¿½ria para o nï¿½
         if (novo == NULL)
             return;
 
@@ -41,9 +41,9 @@ void insereAntesPrimeiroPar(No**lista, int valor)
         ant = atual;
         atual = atual->prox;
     }
-    if(atual!=NULL) //se atual==NULL, a lita está vazia ou não possui par
+    if(atual!=NULL) //se atual==NULL, a lita estï¿½ vazia ou nï¿½o possui par
     {
-        No *novo = new No(); // aloca memória para o nó
+        No *novo = new No(); // aloca memï¿½ria para o nï¿½
         if (novo == NULL)
             return;
         novo->dado = valor;
@@ -90,7 +90,7 @@ void insereFinalL(No **lista, int valor)
         n = n->prox;
 
 
-    No *novo = new No(); // aloca memória para o nó
+    No *novo = new No(); // aloca memï¿½ria para o nï¿½
     if (novo == NULL)
         return;
     novo->dado = valor;
@@ -170,7 +170,7 @@ void insereAposCadaPar(No **lista, int valor)
     {
          if(atual->dado%2 == 0)
          {
-             No *novo = new No(); // aloca memória para o nó
+             No *novo = new No(); // aloca memï¿½ria para o nï¿½
             if (novo == NULL)
                 return;
 
@@ -189,7 +189,7 @@ int main(void)
     setlocale(LC_ALL, "Portuguese");
 
     int dado;
-    No *lista, *lista2; //evite usar "list", pois é uma palavra reservada
+    No *lista, *lista2; //evite usar "list", pois ï¿½ uma palavra reservada
 
 
     cout <<"\n##Teste 1\n";
@@ -270,9 +270,9 @@ int main(void)
     mostraL(&lista);
     mostraL(&lista2);
     if(igualL(&lista, &lista2))
-        cout << "As listas são iguais\n";
+        cout << "As listas sï¿½o iguais\n";
     else
-        cout << "As listas não são iguais\n";
+        cout << "As listas nï¿½o sï¿½o iguais\n";
     destroiL(&lista);
     destroiL(&lista2);
 
@@ -292,9 +292,9 @@ int main(void)
     mostraL(&lista);
     mostraL(&lista2);
     if(igualL(&lista, &lista2))
-        cout << "As listas são iguais\n";
+        cout << "As listas sï¿½o iguais\n";
     else
-        cout << "As listas não são iguais\n";
+        cout << "As listas nï¿½o sï¿½o iguais\n";
     destroiL(&lista);
     destroiL(&lista2);
 
@@ -312,9 +312,9 @@ int main(void)
     mostraL(&lista);
     mostraL(&lista2);
     if(igualL(&lista, &lista2))
-        cout << "As listas são iguais\n";
+        cout << "As listas sï¿½o iguais\n";
     else
-        cout << "As listas não são iguais\n";
+        cout << "As listas nï¿½o sï¿½o iguais\n";
     destroiL(&lista);
     destroiL(&lista2);
 
@@ -395,6 +395,15 @@ int main(void)
     insereInicioL(&lista, 5);
     mostraL(&lista);
     cout << "lePosicao(pos=0): " << lePosicao(&lista, 0) << endl;
+    destroiL(&lista);
+    
+    cout <<"\n##Teste 17.1\n";
+    inicializaL(&lista);
+    insereInicioL(&lista, 3);
+    insereInicioL(&lista, 1);
+    insereInicioL(&lista, 5);
+    mostraL(&lista);
+    cout << "lePosicao(pos= -1): " << lePosicao(&lista, -1) << endl;
     destroiL(&lista);
 
 
