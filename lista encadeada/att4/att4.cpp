@@ -51,6 +51,23 @@ bool insereInicioL(No** lista, int valor)
     return true;
 }
 
+void mostraL(No **lista)
+{
+    No *n = *lista;
+
+    cout << "L:{";
+    while(n != NULL ) /// enquanto n n�o for NULL fica no la�o
+    {
+        cout << n->dado;
+        n = n->prox;
+
+        if(n != NULL)
+            cout << ", ";
+    }
+    cout << "}\n";
+}
+
+
 void destroiL(No** lista)
 {
     No* n = *lista;
@@ -124,8 +141,9 @@ int main()
     insereInicioL(&lista, 2);
     insereInicioL(&lista, 1);
 
-    cout << "Ordem (esperado 0): " << verificaOrdem(&lista) << "\n";
+    cout << "Ordem: " << verificaOrdem(&lista) << "\n";
 
+    mostraL(&lista);
     destroiL(&lista);
     return 0;
 }
