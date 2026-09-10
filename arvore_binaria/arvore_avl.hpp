@@ -251,4 +251,141 @@ void ler_arquivo(arvore **t, string nomeArquivo)
     }
     arquivo.close();
 }
+
+void mostrar_arvore_hierarquica(arvore *t, int nivel = 0)
+{
+    if (t == NULL)
+        return;
+
+    mostrar_arvore_hierarquica(t->sad, nivel + 1);
+
+    cout << string(nivel * 4, ' ') << t->info << endl;
+
+    mostrar_arvore_hierarquica(t->sae, nivel + 1);
+}
+
+// Mostra a arvore "deitada" com linhas conectando os nos (estilo tree do Windows)
+// prefixo = barras verticais a desenhar na linha; ultimo = indica se o filho anterior era o ultimo da direita
+void mostrar_arvore_com_linhas(arvore *t, string prefixo, bool ehDireita, bool raiz)
+{
+    if (t == NULL)
+        return;
+
+    string galho = raiz ? "" : (ehDireita ? "|-- " : "`-- ");
+
+    // imprime primeiro a subarvore DIREITA (fica em cima na tela)
+    mostrar_arvore_com_linhas(t->sad, prefixo + (raiz ? "" : (ehDireita ? "|   " : "    ")), true, false);
+
+    cout << prefixo << galho << t->info << endl;
+
+    // depois a subarvore ESQUERDA (fica embaixo)
+    mostrar_arvore_com_linhas(t->sae, prefixo + (raiz ? "" : (ehDireita ? "|   " : "    ")), false, false);
+}
+
+// Chamada simplificada: mostrar_arvore_com_linhas(raiz);
+void mostrar_arvore_com_linhas(arvore *t)
+{
+    mostrar_arvore_com_linhas(t, "", true, true);
+}
+
+// ============ VERSAO "DE PE": raiz em cima, filhos embaixo ============
+// Largura (em "celulas") de uma subarvore = nos que ela contem
+int largura_sub(arvore *t)
+{
+    if (t == NULL)
+        return 0;
+    return largura_sub(t->sae) + largura_sub(t->sad) + 1;
+}
+
+// Desenha o no na "tela" e chama recursivamente para os filhos,
+// calculando a coluna de cada um a partir da largura das subarvores
+// tela = matriz de chars criada com new (sem bibliotecas extras)
+void desenhar_no(arvore *t, int linha, int inicio, char **tela, int celula)
+{
+    if (t == NULL)
+        return;
+
+    int larg_esq = largura_sub(t->sae) * celula;
+    int larg_dir = largura_sub(t->sad) * celula;
+
+    // centro do no atual dentro do espaco que ele ocupa
+    int centro = inicio + (larg_esq + celula) / 2;
+    // converte o numero para string na mao (sem to_string)
+    char texto[12];
+    int tam = 0;
+    int v = t->info;
+    if (v == 0)
+        texto[tam++] = '0';
+    while (v > 0)
+    {
+        // desloca o texto para a direita para inserir o novo digito
+        for (int i = tam; i > 0; i--)
+            texto[i] = texto[i - 1];
+        texto[0] = (char)('0' + v % 10);
+        tam++;
+        v /= 10;
+    }
+    texto[tam] = '\0';
+    for (int i = 0; i < tam; i++)
+        tela[linha][centro + i] = texto[i];
+
+    // conectores ( / e \ ) na linha intermediaria
+    if (t->sae)
+    {
+        int centro_esq = inicio + larg_esq / 2;
+        if (centro_esq < centro - 1)
+            tela[linha + 1][centro - 2] = '/';
+        desenhar_no(t->sae, linha + 2, inicio, tela, celula);
+    }
+    if (t->sad)
+    {
+        int inicio_dir = inicio + larg_esq + celula;
+        int centro_dir = inicio_dir + larg_dir / 2;
+        if (centro_dir > centro + 1)
+            tela[linha + 1][centro + 2] = '\\';
+        desenhar_no(t->sad, linha + 2, inicio_dir, tela, celula);
+    }
+}
+
+// Chamada simplificada: mostrar_arvore_em_pe(raiz);
+void mostrar_arvore_em_pe(arvore *t)
+{
+    if (t == NULL)
+    {
+        cout << "(arvore vazia)" << endl;
+        return;
+    }
+
+    int celula = 4; // largura de cada no na tela
+    int largura = largura_sub(t) * celula + 4;
+    int linhas = altura(t) * 2 - 1; // uma linha de valor + uma de conector por nivel
+
+    // cria a matriz de caracteres na mao
+    char **tela = new char *[linhas];
+    for (int i = 0; i < linhas; i++)
+    {
+        tela[i] = new char[largura + 1];
+        for (int j = 0; j < largura; j++)
+            tela[i][j] = ' ';
+        tela[i][largura] = '\0';
+    }
+
+    desenhar_no(t, 0, 2, tela, celula);
+
+    for (int i = 0; i < linhas; i++)
+    {
+        // remove espacos sobrando no fim da linha
+        int fim = largura;
+        while (fim > 0 && tela[i][fim - 1] == ' ')
+            fim--;
+        tela[i][fim] = '\0';
+        cout << tela[i] << endl;
+    }
+
+    // libera a memoria
+    for (int i = 0; i < linhas; i++)
+        delete[] tela[i];
+    delete[] tela;
+}
+
 #endif
