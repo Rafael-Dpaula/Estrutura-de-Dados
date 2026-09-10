@@ -388,4 +388,24 @@ void mostrar_arvore_em_pe(arvore *t)
     delete[] tela;
 }
 
+// Mostra apenas os valores EXCLUSIVAMENTE entre dois limites (sem inclui-los)
+// O usuario determina qual e qual; os limites em si NAO sao mostrados
+void mostrar_entre_limites(arvore *t, int inferior, int superior)
+{
+    if (t == NULL)
+        return;
+
+    // so desce para a esquerda se ainda pode existir valor > inferior nessa subarvore
+    if (t->info > inferior)
+        mostrar_entre_limites(t->sae, inferior, superior);
+
+    // o no em si entra na faixa? (exclusivo dos dois lados)
+    if (t->info > inferior && t->info < superior)
+        cout << t->info << " ";
+
+    // so desce para a direita se ainda pode existir valor < superior nessa subarvore
+    if (t->info < superior)
+        mostrar_entre_limites(t->sad, inferior, superior);
+}
+
 #endif
