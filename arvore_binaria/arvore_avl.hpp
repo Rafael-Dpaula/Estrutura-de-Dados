@@ -241,12 +241,12 @@ void ler_arquivo(arvore **t, string nomeArquivo)
         if (acao == "inserir")
         {
             inserir_avl(t, valor);
-            cout << "Executado: Inserir " << valor << endl;
+            cout << "Executado: Inserir -> " << valor << endl;
         }
         else if (acao == "remover")
         {
             remover_avl(t, valor);
-            cout << "Executado: Remover " << valor << endl;
+            cout << "Executado: Remover -> " << valor << endl;
         }
     }
     arquivo.close();
